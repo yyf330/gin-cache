@@ -23,6 +23,7 @@ type Config struct {
 	ignoreQueryOrder bool
 	prefixKey        string
 	withoutHeader    bool
+	middleware       bool
 }
 
 func newConfigByOpts(opts ...Option) *Config {
@@ -50,6 +51,13 @@ func WithLogger(l Logger) Option {
 		if l != nil {
 			c.logger = l
 		}
+	}
+}
+
+// IsMiddleWare set the middleware standard
+func IsMiddleWare(isMiddleWare bool) Option {
+	return func(c *Config) {
+		c.middleware = isMiddleWare
 	}
 }
 

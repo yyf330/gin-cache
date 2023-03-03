@@ -116,10 +116,19 @@ func cache(
 			respCache.fillWithCacheWriter(cacheWriter, cfg.withoutHeader)
 
 			// only cache 2xx response
-			if !c.IsAborted() && cacheWriter.Status() < 300 && cacheWriter.Status() >= 200 {
-				if err := cacheStore.Set(cacheKey, respCache, cacheDuration); err != nil {
-					cfg.logger.Errorf("set cache key error: %s, cache key: %s", err, cacheKey)
+			cacheSet := func() {
+				if cacheWriter.Status() < 300 && cacheWriter.Status() >= 200 {
+					if err := cacheStore.Set(cacheKey, respCache, cacheDuration); err != nil {
+						cfg.logger.Errorf("set cache key error: %s, cache key: %s", err, cacheKey)
+					}
 				}
+			}
+			if !cfg.middleware {
+				if !c.IsAborted() {
+					cacheSet()
+				}
+			} else {
+				cacheSet()
 			}
 
 			return respCache, nil
