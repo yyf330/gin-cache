@@ -64,6 +64,14 @@ func cache(
 			cacheKey = cfg.prefixKey + cacheKey
 		}
 
+		if len(cfg.prefixHeadersKeys) != 0 {
+			var prefix []string
+			for _, header := range cfg.prefixHeadersKeys {
+				prefix = append(prefix, c.GetHeader(header))
+			}
+
+			cacheKey = strings.Join(prefix, "/") + cacheKey
+		}
 		// merge cfg
 		cacheStore := defaultCacheStore
 		if cacheStrategy.CacheStore != nil {

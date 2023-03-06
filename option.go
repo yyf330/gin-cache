@@ -24,6 +24,8 @@ type Config struct {
 	prefixKey        string
 	withoutHeader    bool
 	middleware       bool
+
+	prefixHeadersKeys []string
 }
 
 func newConfigByOpts(opts ...Option) *Config {
@@ -159,6 +161,13 @@ func IgnoreQueryOrder() Option {
 func WithPrefixKey(prefix string) Option {
 	return func(c *Config) {
 		c.prefixKey = prefix
+	}
+}
+
+// WithPrefixHeadersKey will prefix the headers key
+func WithPrefixHeadersKey(headers []string) Option {
+	return func(c *Config) {
+		c.prefixHeadersKeys = headers
 	}
 }
 
